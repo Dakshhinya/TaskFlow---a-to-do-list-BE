@@ -8,7 +8,11 @@ exports.registerUser = async(userData)=>{
 }
 
 exports.loginUser = async(userData)=>{
+      console.log("Checking user:", userData);
+
     const existingUser = await checkUser(userData)
+      console.log("Found user:", existingUser);
+
     if(!existingUser){
         return null;
     }
@@ -17,7 +21,7 @@ exports.loginUser = async(userData)=>{
         id:existingUser.id
     }
 
-    const token = jwt.sign(payload.process.env.JWT_SECRET,{expiresIn:"1h"})
+    const token = jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1h"})
     return {
         token,
         id:existingUser.id,
