@@ -1,5 +1,5 @@
 const {registerUser, loginUser} = require('../services/authService')
-
+const jwt = require('jsonwebtoken')
 exports.signup = async(req, res)=>{
     try{
         const newUser = await registerUser(req.body);
@@ -16,9 +16,22 @@ exports.login = async(req, res)=>{
     try{
         const validUser = await loginUser(req.body);
         if(!validUser){
-            res.status(400).json({message:"Invalid credentials"})
+            return res.status(400).json({message:"Invalid credentials"})
         }
-        res.json(validUser)
+
+        const token = jwt.sign(
+            {userId:validUser.id, email:validUser.email},
+            process.env.JWT_SECRET,
+            {expiresIn:"7d"}
+        );
+
+        res.json({
+            message: "Login Successfull",
+            token,
+            username:validUser.username,
+            email:validUser.email,
+            userId: validUser.id  
+        })
     }catch(err){
         console.error("User not found", err);
         res.status(400).json({error:err.message})

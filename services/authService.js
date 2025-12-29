@@ -16,15 +16,17 @@ exports.loginUser = async(userData)=>{
     if(!existingUser){
         return null;
     }
-    const payload ={
-        email: existingUser.email,
-        id:existingUser.id
-    }
+    // const payload ={
+    //     email: existingUser.email,
+    //     id:existingUser.id
+    // }
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1h"})
-    return {
-        token,
-        id:existingUser.id,
-        email:existingUser.email
-    };
+    // const token = jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1h"})
+    // return {
+    //     token,
+    //     id:existingUser.id,
+    //     email:existingUser.email
+    // };
+
+    return existingUser;
 }
