@@ -12,7 +12,7 @@ exports.registerUser = async({username, email, password})=>{
     email,
     password: hashedPassword
   });
-    return user;
+    return newUser;
 }
 
 exports.loginUser = async({email, password})=>{
