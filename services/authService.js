@@ -1,32 +1,34 @@
 const createUser = require('../models/signup')
 const checkUser = require('../models/login')
 const jwt=require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 
-exports.registerUser = async(userData)=>{
-    const user = await createUser(userData)
+
+exports.registerUser = async({username, email, password})=>{
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await createUser({
+    username,
+    email,
+    password: hashedPassword
+  });
     return user;
 }
 
-exports.loginUser = async(userData)=>{
-      console.log("Checking user:", userData);
+exports.loginUser = async({email, password})=>{
+      console.log("Checking user:", {email});
 
-    const existingUser = await checkUser(userData)
+    const existingUser = await checkUser(email)
       console.log("Found user:", existingUser);
 
     if(!existingUser){
         return null;
     }
-    // const payload ={
-    //     email: existingUser.email,
-    //     id:existingUser.id
-    // }
+    const isMatch = await bcrypt.compare(password, existingUser.password);
 
-    // const token = jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:"1h"})
-    // return {
-    //     token,
-    //     id:existingUser.id,
-    //     email:existingUser.email
-    // };
+  if (!isMatch) {
+    return null;
+  }
 
     return existingUser;
 }
