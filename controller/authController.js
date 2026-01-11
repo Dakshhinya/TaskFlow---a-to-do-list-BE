@@ -30,7 +30,7 @@ exports.login = async(req, res)=>{
             token,
             username:validUser.username,
             email:validUser.email,
-            userId: validUser.id  
+            userId: validUser.user_id  
         })
     }catch(err){
         console.error("User not found", err);
